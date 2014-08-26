@@ -49,7 +49,6 @@ package
 			score.alignment = "left";
 			add(score);
 			
-			FlxG.log("Please to toast " + timeToToast);
 			instr.text = ("Please to toast for  " + timeToToast + "seconds");
 		}
 		
@@ -66,17 +65,11 @@ package
 					FlxG.score += 500;
 				}
 				results.text = ("Time =" + (Math.round((timeElapsed*100)) / 100) + ". Bonus =" + int(bonus) );
-				FlxG.log(timeElapsed + " bonus = " + bonus);
 				timeElapsed = 0;
-				
-				//timeToToast = (FlxG.random() * 6) + 2;
-				
-				FlxG.log("Please to toast" + timeToToast);
 				instr.text = ("Please to toast for  " + timeToToast + " seconds");
 				FlxG.score += bonus;
 			}
 			
-			//FlxG.log(FlxG.elapsed);
 			score.text = ("Score :" + FlxG.score)
 			
 			super.update();
