@@ -109,8 +109,9 @@ package
 			}
 			
 			//Begin
-			if(_ok && !_ok2 && FlxG.keys.SPACE)
+			if(FlxG.keys.SPACE)
 			{
+				FlxG.switchState(new PlayState());
 				_ok2 = true;
 				//FlxG.play(SndHit2);
 /*				FlxG.flash.start(0xFF0000,0.5);
@@ -140,7 +141,7 @@ package
 		private function onFade():void
 		{
 			//FlxG.state = new PlayState();
-			FlxG.switchState(new PlayState());
+			
 			
 			//FlxG.state = new PlayStateTiles();
 		}
