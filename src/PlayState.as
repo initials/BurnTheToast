@@ -6,7 +6,7 @@ package
 	public class PlayState extends FlxState
 	{
 		public var timeElapsed:Number = 0;
-		public var timeToToast:int = (FlxU.random() * 6) + 2;
+		public var timeToToast:int = (FlxG.random() * 6) + 2;
 		[Embed(source = "toaster.png")] private var ImgToaster:Class;
 		[Embed(source = "toast.png")] private var ImgToast:Class;
 		public var toaster:FlxSprite;
@@ -68,7 +68,7 @@ package
 				results.text = ("Time =" + (Math.round((timeElapsed*100)) / 100) + ". Bonus =" + int(bonus) );
 				FlxG.log(timeElapsed + " bonus = " + bonus);
 				timeElapsed = 0;
-				timeToToast = (FlxU.random() * 6) + 2;
+				timeToToast = (FlxG.random() * 6) + 2;
 				FlxG.log("Please to toast" + timeToToast);
 				instr.text = ("Please to toast for  " + timeToToast + " seconds");
 				FlxG.score += bonus;

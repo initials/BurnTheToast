@@ -18,7 +18,7 @@ package
 		override public function create():void
 		{
 			
-			bgColor = 0xff333333;
+			FlxG.bgColor = 0xff333333;
 			
 			_t1 = new FlxText(FlxG.width, 20, 320, "Please To Not \nBurn The Toast");
 			_t1.size = 16;
@@ -85,7 +85,7 @@ package
 				
 			
 				//flixel button
-				this.add((new FlxSprite(t1m+150,FlxG.height-20)).createGraphic(106,19,0xffFF0000));
+/*				this.add((new FlxSprite(t1m+150,FlxG.height-20)).createGraphic(106,19,0xffFF0000));
 				b = new FlxButton(t1m+151,FlxG.height-20,onFlixel);
 				b.loadGraphic((new FlxSprite()).createGraphic(104,15,0xffFF8A8A),(new FlxSprite()).createGraphic(104,15,0xffDDDDDD));
 				t1 = new FlxText(15,1,100,"Initials Website");
@@ -97,7 +97,7 @@ package
 				t1 = new FlxText(t1m-60,FlxG.height/3+139,210,"PRESS SPACE TO PLAY.");
 				t1.color = 0xFF0000;
 				t1.alignment = "center";
-				add(t1);
+				add(t1);*/
 				
 				_t22 = new FlxText(120,200,320,"A Game By: Initials");
 				_t22.size = 8;
@@ -113,8 +113,8 @@ package
 			{
 				_ok2 = true;
 				//FlxG.play(SndHit2);
-				FlxG.flash.start(0xFF0000,0.5);
-				FlxG.fade.start(0xff131c1b,1,onFade);
+/*				FlxG.flash.start(0xFF0000,0.5);
+				FlxG.fade.start(0xff131c1b,1,onFade);*/
 			}
 
 			super.update();
@@ -122,7 +122,7 @@ package
 		
 		private function onFlixel():void
 		{
-			FlxU.openURL("http://initialscommand.com");
+			FlxU.openURL("http://initialsgames.com");
 		}
 		
 		private function onDanny():void
@@ -139,7 +139,9 @@ package
 		
 		private function onFade():void
 		{
-			FlxG.state = new PlayState();
+			//FlxG.state = new PlayState();
+			FlxG.switchState(new PlayState());
+			
 			//FlxG.state = new PlayStateTiles();
 		}
 	}
