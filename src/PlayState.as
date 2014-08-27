@@ -14,9 +14,13 @@ package
 		public var instr:FlxText;
 		public var results:FlxText;
 		public var score:FlxText;
+		public var timerText:FlxText;
+		public var mode:String;
 		
 		override public function create():void
 		{
+			FlxG.bgColor = 0xff1e1c1c;
+			
 			//add(new FlxText(0, 0, 100, "Hello, World!")); //adds a 100x20 text field at position 0,0 (upper left)
 			
 			toaster = new FlxSprite(FlxG.width/2,FlxG.height/2);
@@ -37,7 +41,7 @@ package
 			instr.alignment = "center";
 			add(instr);		
 			
-			results = new FlxText(0,24,320," ");
+			results = new FlxText(0,FlxG.height - 24,320,"Press [SPACE] to start.");
 			results.size = 16;
 			results.antialiasing = true;
 			results.alignment = "center";
@@ -49,11 +53,24 @@ package
 			score.alignment = "left";
 			add(score);
 			
-			instr.text = ("Please to toast for  " + timeToToast + "seconds");
+			instr.text = ("Please to toast for 5.00 seconds.");
+			
+			timerText = new FlxText(0,40,320,"0.00");
+			timerText.size = 32;
+			timerText.antialiasing = true;
+			timerText.alignment = "center";
+			add(timerText);
+			
+			
+			mode = "result";
+			
 		}
 		
 		override public function update():void {
-			timeElapsed += FlxG.elapsed;
+			
+			score.text = ("Score :" + FlxG.score)
+			
+/*			timeElapsed += FlxG.elapsed;
 			if (FlxG.keys.justPressed("SPACE")) {
 				var bonus:Number = FlxU.abs((1 / (timeElapsed - timeToToast))) * 100;
 				toast.exists = true;
@@ -70,8 +87,96 @@ package
 				FlxG.score += bonus;
 			}
 			
-			score.text = ("Score :" + FlxG.score)
+			score.text = ("Score :" + FlxG.score)*/
 			
+			///results.text = ("Time =" + (Math.round((timeElapsed * 100)) / 100) + ". Bonus =" + int(bonus) );
+			
+			
+			if (mode == "play") {
+/*				if (FlxG.keys.Q)
+				{
+					timeElapsed += FlxG.elapsed/50;
+				
+				}
+				else {
+					timeElapsed += FlxG.elapsed;
+				}*/
+				
+				timeElapsed += FlxG.elapsed;
+
+				
+					
+					
+				if (FlxG.keys.justPressed("SPACE")) {
+					toast.exists = true;
+					toast.x = FlxG.width/2;
+					toast.y = FlxG.height / 2;
+					
+					toaster.x = FlxG.width/2;
+					toaster.y = FlxG.height / 2;
+					
+					toaster.frame = 0;
+					
+					
+				
+
+					if (timeElapsed < 4.97)
+					{
+						instr.text = "Under done";
+						toast.velocity.y = -150;
+						toast.frame = 0;
+					
+					}
+					else if (timeElapsed > 5.03)
+					{
+						instr.text = "We ask you please to not burn the toast";
+						toast.velocity.y = -250;
+						toast.frame = 2;
+					}
+					else
+					{
+						instr.text = "Perfect";
+						FlxG.score += 2000;
+						toast.velocity.y = -200;
+						toast.frame = 1;
+						timeElapsed = 5.00;
+					}
+					
+					
+				
+					mode = "result";
+				}
+				
+				timerText.text = (Math.round((timeElapsed * 100)) / 100) + "";
+				if (timerText.text.length == 1)
+				{
+					timerText.text += ".00";
+				}
+				if (timerText.text.length == 3)
+				{
+					timerText.text += "0";
+				}
+				if (timeElapsed > 4.00)
+				{
+					toaster.x += (-2 + FlxG.random()*4);
+					toaster.y += (-2 + FlxG.random()*4);
+				}
+					
+			}
+			else if (mode == "result")
+			{
+				
+				if (FlxG.keys.justPressed("SPACE")) {
+					toast.exists = false;
+					instr.text = ("Please to toast for 5.00 seconds");
+					timeElapsed = 0;
+					mode = "play";
+					toaster.frame = 1;
+					results.text = "";
+					
+				}
+			
+			}
 			super.update();
 			
 		}
