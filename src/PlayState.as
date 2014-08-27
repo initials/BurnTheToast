@@ -120,14 +120,14 @@ package
 					
 				
 
-					if (timeElapsed < 4.97)
+					if (timeElapsed < 4.99)
 					{
 						instr.text = "Under done";
 						toast.velocity.y = -150;
 						toast.frame = 0;
 					
 					}
-					else if (timeElapsed > 5.03)
+					else if (timeElapsed > 5.01)
 					{
 						instr.text = "We ask you please to not burn the toast";
 						toast.velocity.y = -250;
