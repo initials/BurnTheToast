@@ -2,6 +2,13 @@ package
 {
 	import org.flixel.*;
 	import Math;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.external.ExternalInterface;
+	import flash.net.URLVariables;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.navigateToURL;
 
 	public class PlayState extends FlxState
 	{
@@ -16,6 +23,8 @@ package
 		public var score:FlxText;
 		public var timerText:FlxText;
 		public var mode:String;
+		
+		public var combo:int;
 		
 		override public function create():void
 		{
@@ -55,14 +64,17 @@ package
 			
 			instr.text = ("Please to toast for 5.00 seconds.");
 			
-			timerText = new FlxText(0,40,320,"0.00");
+			timerText = new FlxText(FlxG.width/2 -30,40,320,"0.00");
 			timerText.size = 32;
 			timerText.antialiasing = true;
-			timerText.alignment = "center";
+			timerText.alignment = "left";
 			add(timerText);
 			
 			
 			mode = "result";
+			
+			combo = 0;
+			
 			
 		}
 		
@@ -93,17 +105,32 @@ package
 			
 			
 			if (mode == "play") {
-/*				if (FlxG.keys.Q)
+				
+				CONFIG::debug
+				//if (FlxG.debug)
 				{
-					timeElapsed += FlxG.elapsed/50;
+					// your code here
+					
+					if (FlxG.keys.Q)
+					{
+						timeElapsed += FlxG.elapsed/50;
+					
+					}
+					else {
+						timeElapsed += FlxG.elapsed;
+					}
+				
 				
 				}
-				else {
+				CONFIG::release
+				{
+					timeElapsed += FlxG.elapsed;
+					
+				}
+				
+/*				else {
 					timeElapsed += FlxG.elapsed;
 				}*/
-				
-				timeElapsed += FlxG.elapsed;
-
 				
 					
 					
@@ -122,24 +149,37 @@ package
 
 					if (timeElapsed < 4.99)
 					{
-						instr.text = "Under done";
+						instr.text = "Under done. \n\n\n\n\n\n\n\nPress [ENTER] to Tweet your score.";
 						toast.velocity.y = -150;
 						toast.frame = 0;
+						
+						FlxG.score -= (150);
+						
+						combo=0;
 					
 					}
 					else if (timeElapsed > 5.01)
 					{
-						instr.text = "We ask you please to not burn the toast";
+						instr.text = "We ask you please to not burn the toast. \n\n\n\n\n\n\n\nPress [ENTER] to Tweet your score.";
 						toast.velocity.y = -250;
 						toast.frame = 2;
+						
+						FlxG.score -= (150);
+						
+						combo=0;
 					}
 					else
 					{
-						instr.text = "Perfect";
-						FlxG.score += 2000;
+						combo++;
+						
+						instr.text = "Perfect, " + combo + " in a row. \n\n\n\n\n\n\n\nPress [ENTER] to Tweet your score.";
+						
+						FlxG.score += (2000*combo);
 						toast.velocity.y = -200;
 						toast.frame = 1;
 						timeElapsed = 5.00;
+						
+						
 					}
 					
 					
@@ -168,11 +208,17 @@ package
 				
 				if (FlxG.keys.justPressed("SPACE")) {
 					toast.exists = false;
-					instr.text = ("Please to toast for 5.00 seconds");
+					instr.text = ("Please to toast for 5.00 seconds.");
 					timeElapsed = 0;
 					mode = "play";
 					toaster.frame = 1;
 					results.text = "";
+					
+				}
+				
+				
+				if (FlxG.keys.justPressed("ENTER")) {
+					clickTweet();
 					
 				}
 			
@@ -181,6 +227,68 @@ package
 			
 		}
 		
-		
+
+		function clickTweet():void
+		{
+
+			//The path to the share page
+			var path:URLRequest = new URLRequest("http://twitter.com/share");
+
+			//using the GET method means you will use a QueryString to send the variables
+			//twitter likes this. This is used as an alternate method if we don’t use
+			//a javascript popup
+			path.method = URLRequestMethod.GET;
+
+			//The URLVariables class is a nice way to keep everything organised. There is the added bonus
+			//that we can use these values if we GET instead of using the Javascript popup.
+			var tweetVars = new URLVariables();
+			tweetVars.url = "http://www.initialsgames.com/burn/";
+			tweetVars.text = "Please to not burn the toast. Score " + FlxG.score + " with a combo of " + combo + " via @initials_games ";
+			//tweetVars.via = "initials_games";
+			//tweetVars.related = " ";
+
+			//Set the URLRequest to include the URLVariables
+			path.data = tweetVars;
+
+			//If Flash is okay with us using ExternalInterface
+			if (ExternalInterface.available){
+			//I would imagine that If ExternalInterface wasn’t available that would be caught
+			//with the try/catch statement – oh well.
+			try
+			{
+				//We’re going to pass this as a string to javascript, so we have to
+				//"stringify" it instead of using the URLVariable + URLRequest approach
+				//I’m putting a dummy placeholder in the first position of the
+				//QueryString so that I can shuffle my variables around without
+				//worrying about who gets a ‘?’ instead of a ‘&’. It’s faster than
+				//writing a quick if statement, but commenting about it takes far more time ; )
+				path.url +="?d=0";
+				for (var each in tweetVars){
+				path.url += "&"+each+"="+tweetVars[each];
+				}
+
+				//Make a call to the openTweetWin Javascript function
+				//and pass it the ‘stringified’ version of the QueryString
+				ExternalInterface.call("openTweetWin", path.url);
+			} 
+			catch (error:SecurityError)
+			{
+				//If it doesn’t work just open a damn window.
+				navigateToURL(path, "_blank");
+				instr.text = "SecurityError";
+			} 
+			catch (error:Error)
+			{
+			//If it doesn’t work just open a damn window.
+			navigateToURL(path, "_blank");
+			instr.text = "Error";
+			}
+			} 
+			else {
+			//If it doesn’t work just open a damn window.
+			navigateToURL(path, "_blank");
+			instr.text = "Failed";
+			}
+		}
 	}
 }
